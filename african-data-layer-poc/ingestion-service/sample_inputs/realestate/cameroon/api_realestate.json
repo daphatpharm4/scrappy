@@ -1,0 +1,12 @@
+[
+  {"city": "Yaounde", "bedrooms": 2, "bathrooms": 1, "rent": 180000, "currency": "XAF", "provider": "Capital Homes", "captured_at": "2024-06-02T07:00:00Z"},
+  {"city": "Douala", "bedrooms": 3, "bathrooms": 2, "rent": 240000, "currency": "XAF", "provider": "Coastal Realty", "captured_at": "2024-06-02T07:10:00Z"},
+  {"city": "Bamenda", "bedrooms": 1, "bathrooms": 1, "rent": 95000, "currency": "XAF", "provider": "Grassfield Rentals", "captured_at": "2024-06-02T07:20:00Z"},
+  {"city": "Bafoussam", "bedrooms": 2, "bathrooms": 2, "rent": 130000, "currency": "XAF", "provider": "Western Estates", "captured_at": "2024-06-02T07:30:00Z"},
+  {"city": "Limbe", "bedrooms": 3, "bathrooms": 2, "rent": 210000, "currency": "XAF", "provider": "Atlantic Homes", "captured_at": "2024-06-02T07:40:00Z"},
+  {"city": "Garoua", "bedrooms": 2, "bathrooms": 1, "rent": 120000, "currency": "XAF", "provider": "North Realty", "captured_at": "2024-06-02T07:50:00Z"},
+  {"city": "Maroua", "bedrooms": 4, "bathrooms": 3, "rent": 260000, "currency": "XAF", "provider": "Sahel Rentals", "captured_at": "2024-06-02T08:00:00Z"},
+  {"city": "Kumba", "bedrooms": 2, "bathrooms": 1, "rent": 110000, "currency": "XAF", "provider": "Southwest Estates", "captured_at": "2024-06-02T08:10:00Z"},
+  {"city": "Ngaoundere", "bedrooms": 2, "bathrooms": 2, "rent": 140000, "currency": "XAF", "provider": "Adamawa Realty", "captured_at": "2024-06-02T08:20:00Z"},
+  {"city": "Kribi", "bedrooms": 3, "bathrooms": 2, "rent": 225000, "currency": "XAF", "provider": "Seaside Homes", "captured_at": "2024-06-02T08:30:00Z"}
+]

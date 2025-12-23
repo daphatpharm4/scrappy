@@ -1,0 +1,12 @@
+[
+  {"item": "maize", "price": 120.5, "currency": "KES", "provider": "Nairobi Market", "captured_at": "2024-06-01T08:00:00Z"},
+  {"item": "rice", "price": 210.0, "currency": "KES", "provider": "Mombasa Market", "captured_at": "2024-06-01T08:10:00Z"},
+  {"item": "beans", "price": 190.0, "currency": "KES", "provider": "Kisumu Fresh", "captured_at": "2024-06-01T08:20:00Z"},
+  {"item": "milk", "price": 60.0, "currency": "KES", "provider": "Kiambu Dairy", "captured_at": "2024-06-01T08:30:00Z"},
+  {"item": "sugar", "price": 150.0, "currency": "KES", "provider": "Machakos Market", "captured_at": "2024-06-01T08:40:00Z"},
+  {"item": "bread", "price": 70.0, "currency": "KES", "provider": "Nakuru Bakers", "captured_at": "2024-06-01T08:50:00Z"},
+  {"item": "tea", "price": 50.0, "currency": "KES", "provider": "Kericho Tea", "captured_at": "2024-06-01T09:00:00Z"},
+  {"item": "coffee", "price": 180.0, "currency": "KES", "provider": "Eldoret Beans", "captured_at": "2024-06-01T09:10:00Z"},
+  {"item": "flour", "price": 140.0, "currency": "KES", "provider": "Thika Millers", "captured_at": "2024-06-01T09:20:00Z"},
+  {"item": "cooking_oil", "price": 320.0, "currency": "KES", "provider": "Nairobi Grocers", "captured_at": "2024-06-01T09:30:00Z"}
+]

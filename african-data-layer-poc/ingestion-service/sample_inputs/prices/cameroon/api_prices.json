@@ -1,0 +1,12 @@
+[
+  {"item": "maize", "price": 350.0, "currency": "XAF", "provider": "Yaounde Central", "captured_at": "2024-06-02T08:00:00Z"},
+  {"item": "rice", "price": 520.0, "currency": "XAF", "provider": "Douala Port", "captured_at": "2024-06-02T08:10:00Z"},
+  {"item": "beans", "price": 480.0, "currency": "XAF", "provider": "Bafoussam Market", "captured_at": "2024-06-02T08:20:00Z"},
+  {"item": "milk", "price": 310.0, "currency": "XAF", "provider": "Bamenda Dairy", "captured_at": "2024-06-02T08:30:00Z"},
+  {"item": "sugar", "price": 430.0, "currency": "XAF", "provider": "Garoua Market", "captured_at": "2024-06-02T08:40:00Z"},
+  {"item": "bread", "price": 290.0, "currency": "XAF", "provider": "Yaounde Bakers", "captured_at": "2024-06-02T08:50:00Z"},
+  {"item": "tea", "price": 260.0, "currency": "XAF", "provider": "Cameroon Tea Estates", "captured_at": "2024-06-02T09:00:00Z"},
+  {"item": "coffee", "price": 680.0, "currency": "XAF", "provider": "Boyo Coffee", "captured_at": "2024-06-02T09:10:00Z"},
+  {"item": "flour", "price": 410.0, "currency": "XAF", "provider": "Limbe Millers", "captured_at": "2024-06-02T09:20:00Z"},
+  {"item": "cooking_oil", "price": 750.0, "currency": "XAF", "provider": "Douala Grocers", "captured_at": "2024-06-02T09:30:00Z"}
+]
