@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.env
+.venv
+env/
+venv/
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.cache/
+
+# Local data artifacts
+local_object_store/

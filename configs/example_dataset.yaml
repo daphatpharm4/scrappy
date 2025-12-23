@@ -1,0 +1,14 @@
+dataset:
+  country_code: "KEN"
+  dataset: "economic_indicators"
+  ingest_date: "2024-09-30"
+  source_url: "https://example.com/kenya/economic_indicators.csv"
+  source_format: "csv"
+
+object_store:
+  bucket: "africa-datalayer"
+  # Provide either S3 credentials or uncomment local_path for filesystem testing
+  # endpoint_url: "https://minio.example.com"
+  # access_key: "MINIO_KEY"
+  # secret_key: "MINIO_SECRET"
+  # local_path: "./local_object_store"
