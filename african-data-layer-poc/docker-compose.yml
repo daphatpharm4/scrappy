@@ -1,0 +1,159 @@
+version: "3.9"
+services:
+  minio:
+    image: minio/minio:RELEASE.2024-05-10T01-41-38Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - datalake
+
+  ingestion-service:
+    build:
+      context: ..
+      dockerfile: african-data-layer-poc/ingestion-service/Dockerfile
+    env_file: african-data-layer-poc/.env
+    environment:
+      SERVICE_NAME: ingestion-service
+      SERVICE_VERSION: ${SERVICE_VERSION}
+      SERVICE_ENV: ${SERVICE_ENV}
+      LOG_LEVEL: ${LOG_LEVEL}
+      SHUTDOWN_GRACE_SECONDS: ${SHUTDOWN_GRACE_SECONDS}
+      REQUEST_TIMEOUT_SECONDS: ${REQUEST_TIMEOUT_SECONDS}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET: ${MINIO_BUCKET}
+      MINIO_REGION: ${MINIO_REGION}
+      MINIO_SECURE: ${MINIO_SECURE}
+      QUERY_API_URL: ${QUERY_API_URL}
+      SHARED_BEARER_TOKEN: ${SHARED_BEARER_TOKEN}
+    ports:
+      - "${INGESTION_PORT:-8003}:8003"
+    depends_on:
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - datalake
+
+  cleaning-service:
+    build:
+      context: ..
+      dockerfile: african-data-layer-poc/cleaning-service/Dockerfile
+    env_file: african-data-layer-poc/.env
+    environment:
+      SERVICE_NAME: cleaning-service
+      SERVICE_VERSION: ${SERVICE_VERSION}
+      SERVICE_ENV: ${SERVICE_ENV}
+      LOG_LEVEL: ${LOG_LEVEL}
+      SHUTDOWN_GRACE_SECONDS: ${SHUTDOWN_GRACE_SECONDS}
+      REQUEST_TIMEOUT_SECONDS: ${REQUEST_TIMEOUT_SECONDS}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET: ${MINIO_BUCKET}
+      MINIO_REGION: ${MINIO_REGION}
+      MINIO_SECURE: ${MINIO_SECURE}
+      SHARED_BEARER_TOKEN: ${SHARED_BEARER_TOKEN}
+    ports:
+      - "${CLEANING_PORT:-8004}:8004"
+    depends_on:
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8004/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - datalake
+
+  query-api:
+    build:
+      context: ..
+      dockerfile: african-data-layer-poc/query-api-service/Dockerfile
+    env_file: african-data-layer-poc/.env
+    environment:
+      SERVICE_NAME: query-api
+      SERVICE_VERSION: ${SERVICE_VERSION}
+      SERVICE_ENV: ${SERVICE_ENV}
+      LOG_LEVEL: ${LOG_LEVEL}
+      SHUTDOWN_GRACE_SECONDS: ${SHUTDOWN_GRACE_SECONDS}
+      REQUEST_TIMEOUT_SECONDS: ${REQUEST_TIMEOUT_SECONDS}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET: ${MINIO_BUCKET}
+      MINIO_REGION: ${MINIO_REGION}
+      MINIO_SECURE: ${MINIO_SECURE}
+      QUERY_API_PORT: ${QUERY_API_PORT}
+      SHARED_BEARER_TOKEN: ${SHARED_BEARER_TOKEN}
+    ports:
+      - "${QUERY_API_PORT:-8000}:8000"
+    depends_on:
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - datalake
+
+  ai-qa:
+    build:
+      context: ..
+      dockerfile: african-data-layer-poc/ai-qa-service/Dockerfile
+    env_file: african-data-layer-poc/.env
+    environment:
+      SERVICE_NAME: ai-qa
+      SERVICE_VERSION: ${SERVICE_VERSION}
+      SERVICE_ENV: ${SERVICE_ENV}
+      LOG_LEVEL: ${LOG_LEVEL}
+      SHUTDOWN_GRACE_SECONDS: ${SHUTDOWN_GRACE_SECONDS}
+      REQUEST_TIMEOUT_SECONDS: ${REQUEST_TIMEOUT_SECONDS}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET: ${MINIO_BUCKET}
+      MINIO_REGION: ${MINIO_REGION}
+      MINIO_SECURE: ${MINIO_SECURE}
+      AI_QA_PORT: ${AI_QA_PORT}
+      SHARED_BEARER_TOKEN: ${SHARED_BEARER_TOKEN}
+      QUERY_API_URL: http://query-api:8000
+    ports:
+      - "${AI_QA_PORT:-8001}:8001"
+    depends_on:
+      query-api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - datalake
+
+networks:
+  datalake:
+    driver: bridge
+
+volumes:
+  minio_data:

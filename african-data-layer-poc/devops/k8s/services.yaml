@@ -1,0 +1,175 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingestion-service
+  namespace: datalake
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingestion-service
+  template:
+    metadata:
+      labels:
+        app: ingestion-service
+    spec:
+      containers:
+        - name: ingestion-service
+          image: ghcr.io/example/ingestion-service:latest
+          envFrom:
+            - secretRef:
+                name: datalayer-secrets
+          env:
+            - name: SERVICE_NAME
+              value: ingestion-service
+          ports:
+            - containerPort: 8003
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8003
+            initialDelaySeconds: 10
+            periodSeconds: 15
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cleaning-service
+  namespace: datalake
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cleaning-service
+  template:
+    metadata:
+      labels:
+        app: cleaning-service
+    spec:
+      containers:
+        - name: cleaning-service
+          image: ghcr.io/example/cleaning-service:latest
+          envFrom:
+            - secretRef:
+                name: datalayer-secrets
+          env:
+            - name: SERVICE_NAME
+              value: cleaning-service
+          ports:
+            - containerPort: 8004
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8004
+            initialDelaySeconds: 10
+            periodSeconds: 15
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: query-api
+  namespace: datalake
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: query-api
+  template:
+    metadata:
+      labels:
+        app: query-api
+    spec:
+      containers:
+        - name: query-api
+          image: ghcr.io/example/query-api:latest
+          envFrom:
+            - secretRef:
+                name: datalayer-secrets
+          env:
+            - name: SERVICE_NAME
+              value: query-api
+          ports:
+            - containerPort: 8000
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-qa
+  namespace: datalake
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-qa
+  template:
+    metadata:
+      labels:
+        app: ai-qa
+    spec:
+      containers:
+        - name: ai-qa
+          image: ghcr.io/example/ai-qa:latest
+          envFrom:
+            - secretRef:
+                name: datalayer-secrets
+          env:
+            - name: SERVICE_NAME
+              value: ai-qa
+          ports:
+            - containerPort: 8001
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8001
+            initialDelaySeconds: 10
+            periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: query-api
+  namespace: datalake
+spec:
+  selector:
+    app: query-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-qa
+  namespace: datalake
+spec:
+  selector:
+    app: ai-qa
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8001
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: datalayer-secrets
+  namespace: datalake
+stringData:
+  MINIO_ENDPOINT: "http://minio.datalake.svc.cluster.local:9000"
+  MINIO_ACCESS_KEY: "admin"
+  MINIO_SECRET_KEY: "changeme"
+  MINIO_BUCKET: "datalake"
+  MINIO_REGION: "us-east-1"
+  MINIO_SECURE: "false"
+  SHARED_BEARER_TOKEN: "super-secret-token"
+  SERVICE_ENV: "k8s"
+  LOG_LEVEL: "INFO"
+  SHUTDOWN_GRACE_SECONDS: "15"
+  REQUEST_TIMEOUT_SECONDS: "30"
