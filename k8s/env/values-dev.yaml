@@ -1,48 +1,48 @@
 global:
   azure:
-    subscriptionId: "<subscription-id>"
-    tenantId: "<tenant-id>"
-    resourceGroup: "adl-dev-rg"
-    aksClusterName: "adl-dev-aks"
-    keyVaultName: "adl-dev-kv"
-    queryApiClientId: "<query-api-mi-client-id>"
-    aiQaClientId: "<ai-qa-mi-client-id>"
-    pipelineClientId: "<pipeline-mi-client-id>"
-    storageAccount: "<storage-account-name>"
-    blobContainer: "datalake"
-    blobPrefixRaw: "raw"
-    blobPrefixClean: "clean"
-    blobPrefixCurated: "curated"
+    subscriptionId: <subscription-id>
+    tenantId: <tenant-id>
+    resourceGroup: adl-dev-rg
+    aksClusterName: adl-dev-aks
+    keyVaultName: adl-dev-kv
+    queryApiClientId: <query-api-mi-client-id>
+    aiQaClientId: <ai-qa-mi-client-id>
+    pipelineClientId: <pipeline-mi-client-id>
+    storageAccount: <storage-account-name>
+    blobContainer: datalake
+    blobPrefixRaw: raw
+    blobPrefixClean: clean
+    blobPrefixCurated: curated
   images:
-    registry: "<acr-login-server>"
+    registry: <acr-login-server>
     queryApi:
-      repository: "query-api-service"
-      tag: "latest"
+      repository: query-api-service
+      tag: latest
     aiQa:
-      repository: "ai-qa-service"
-      tag: "latest"
+      repository: ai-qa-service
+      tag: latest
     pipeline:
-      repository: "pipeline-runner"
-      tag: "latest"
+      repository: pipeline-runner
+      tag: latest
   ingress:
-    host: "<ingress-host>"
-    tlsSecretName: "" # optional
+    host: <ingress-host>
+    tlsSecretName: '' # optional
 
 queryApi:
-  apiAuthSecretName: "API_AUTH_TOKEN"
+  apiAuthSecretName: API_AUTH_TOKEN
   resources:
     requests:
-      cpu: "300m"
-      memory: "512Mi"
+      cpu: 300m
+      memory: 512Mi
     limits:
-      cpu: "1"
-      memory: "1Gi"
+      cpu: '1'
+      memory: 1Gi
 
 aiQa:
-  queryApiUrl: "http://query-api.adl-platform.svc.cluster.local:8000"
+  queryApiUrl: http://query-api.adl-platform.svc.cluster.local:8000
 
 pipeline:
-  schedule: "0 * * * *"
+  schedule: 0 * * * *
   runMode: batch
   logLevel: INFO
   startingDeadlineSeconds: 300
@@ -50,5 +50,5 @@ pipeline:
   ttlSecondsAfterFinished: 86400
 
 secretProviderClass:
-  tenantId: "<tenant-id>"
-  keyVaultName: "adl-dev-kv"
+  tenantId: <tenant-id>
+  keyVaultName: adl-dev-kv
