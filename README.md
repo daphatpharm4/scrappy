@@ -39,6 +39,8 @@ This repository now includes lightweight placeholder implementations for the thr
 - `k8s/env/datasets.yaml`: datasets config mounted to the pipeline CronJob
 - `infra/terraform/env/dev.tfvars`: project prefix, environment, region, node pool sizing, resource tags, AAD tenant and subscription IDs
 - Create Key Vault secret `API_AUTH_TOKEN` with the bearer token needed by `query-api-service`.
+- For the scraper-service, set Key Vault secrets for `OPENAI_API_KEY`, `DEEPSEEK_API_KEY`, `XAI_API_KEY`, `HTTP_PROXY`, and `HTTPS_PROXY` as needed.
+- Configure scraper targets and model provider in `k8s/env/values-dev.yaml` under the `scraper` section. The CronJob mounts `targets.txt` from a ConfigMap and selects the provider via `SCRAPER_MODEL_PROVIDER` (openai/deepseek/xai).
 
 ## Testing Endpoints
 ```bash
@@ -53,6 +55,7 @@ curl -H "Authorization: Bearer ${API_AUTH_TOKEN}" https://${HOST}/ask/health
 - Readiness and liveness probes on `/health`
 - HPAs on query-api and ai-qa (CPU-based)
 - Basic alert templates are in Helm values for extension
+- Scraper CronJob for automated lead extraction using LLM summarization
 
 ## Data Lake Access
 - Data is stored in the blob container `datalake` in the provisioned Storage Account.

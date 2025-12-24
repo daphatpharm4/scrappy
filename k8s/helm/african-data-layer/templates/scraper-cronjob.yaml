@@ -1,0 +1,101 @@
+{{- if .Values.scraper.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: scraper
+  namespace: adl-jobs
+  labels:
+    app: scraper
+spec:
+  schedule: {{ .Values.scraper.schedule | quote }}
+  concurrencyPolicy: {{ .Values.scraper.concurrencyPolicy }}
+  startingDeadlineSeconds: {{ .Values.scraper.startingDeadlineSeconds }}
+  jobTemplate:
+    spec:
+      backoffLimit: {{ .Values.scraper.backoffLimit }}
+      activeDeadlineSeconds: {{ .Values.scraper.activeDeadlineSeconds }}
+      ttlSecondsAfterFinished: {{ .Values.scraper.ttlSecondsAfterFinished }}
+      template:
+        metadata:
+          annotations:
+            azure.workload.identity/use: "true"
+          labels:
+            app: scraper
+        spec:
+          serviceAccountName: scraper-sa
+          restartPolicy: Never
+          volumes:
+            - name: scraper-config
+              configMap:
+                name: scraper-targets
+            - name: scraper-secrets
+              csi:
+                driver: secrets-store.csi.k8s.io
+                readOnly: true
+                volumeAttributes:
+                  secretProviderClass: {{ .Values.scraper.secretProviderClass.name }}
+          containers:
+            - name: scraper-service
+              image: "{{ required \"registry\" .Values.global.images.registry }}/{{ .Values.scraper.image.repository }}:{{ .Values.scraper.image.tag }}"
+              imagePullPolicy: IfNotPresent
+              volumeMounts:
+                - name: scraper-config
+                  mountPath: /config
+                - name: scraper-secrets
+                  mountPath: /mnt/secrets
+              env:
+                - name: SCRAPER_CONFIG
+                  value: "/config/targets.txt"
+                - name: SCRAPER_MODEL_PROVIDER
+                  value: {{ .Values.scraper.modelProvider | quote }}
+                - name: OPENAI_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: scraper-secrets
+                      key: OPENAI_API_KEY
+                      optional: true
+                - name: DEEPSEEK_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: scraper-secrets
+                      key: DEEPSEEK_API_KEY
+                      optional: true
+                - name: XAI_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: scraper-secrets
+                      key: XAI_API_KEY
+                      optional: true
+                - name: HTTP_PROXY
+                  valueFrom:
+                    secretKeyRef:
+                      name: scraper-secrets
+                      key: HTTP_PROXY
+                      optional: true
+                - name: HTTPS_PROXY
+                  valueFrom:
+                    secretKeyRef:
+                      name: scraper-secrets
+                      key: HTTPS_PROXY
+                      optional: true
+                - name: AZURE_STORAGE_ACCOUNT
+                  value: {{ .Values.global.azure.storageAccount | quote }}
+                - name: BLOB_CONTAINER
+                  value: {{ .Values.global.azure.blobContainer | quote }}
+                - name: BLOB_PREFIX_RAW
+                  value: {{ .Values.global.azure.blobPrefixRaw | quote }}
+                - name: BLOB_PREFIX_CLEAN
+                  value: {{ .Values.global.azure.blobPrefixClean | quote }}
+                - name: BLOB_PREFIX_CURATED
+                  value: {{ .Values.global.azure.blobPrefixCurated | quote }}
+{{- with .Values.scraper.extraEnv }}
+{{ toYaml . | indent 16 }}
+{{- end }}
+              resources:
+                requests:
+                  cpu: {{ .Values.scraper.resources.requests.cpu | quote }}
+                  memory: {{ .Values.scraper.resources.requests.memory | quote }}
+                limits:
+                  cpu: {{ .Values.scraper.resources.limits.cpu | quote }}
+                  memory: {{ .Values.scraper.resources.limits.memory | quote }}
+{{- end }}
