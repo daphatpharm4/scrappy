@@ -1,5 +1,50 @@
-sources:
-  - name: sample
-    raw_path: raw/sample.csv
-    clean_path: clean/sample.parquet
-    curated_path: curated/sample.parquet
+datasets:
+  - name: kenya_gdp
+    domain: economic_indicators
+    country: KEN
+    source_id: knbs_gdp
+    run_mode: batch
+    fetch:
+      url: https://data.go.ke/api/kenya/gdp.csv
+      method: GET
+      format: csv
+      compression: none
+      retry:
+        attempts: 3
+        backoff_seconds: 2
+        max_backoff_seconds: 30
+    schema:
+      fields:
+        - name: year
+          dtype: int64
+          required: true
+        - name: indicator
+          dtype: string
+          required: true
+        - name: value
+          dtype: float64
+          required: true
+  - name: cameroon_mobility
+    domain: mobility
+    country: CMR
+    source_id: cameroon_mobility
+    run_mode: batch
+    fetch:
+      url: https://data.cameroon.example/mobility.json
+      method: GET
+      format: json
+      retry:
+        attempts: 4
+        backoff_seconds: 3
+        max_backoff_seconds: 40
+    schema:
+      fields:
+        - name: ts
+          dtype: datetime64[ns]
+          required: true
+        - name: lat
+          dtype: float64
+        - name: lon
+          dtype: float64
+        - name: trips
+          dtype: int64
