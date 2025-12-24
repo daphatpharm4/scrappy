@@ -64,3 +64,14 @@ curl -H "Authorization: Bearer ${API_AUTH_TOKEN}" https://${HOST}/ask/health
 
 ## Cleanup
 Run `scripts/99_destroy.sh` to remove provisioned resources.
+
+## Remote Terraform State
+- Create (or reuse) a storage account and container for state, for example:
+  - Resource group: `adl-dev-rg`
+  - Storage account: `adltfstatesa`
+  - Container: `tfstate`
+  - Key: `dev.terraform.tfstate`
+- The Terraform backend is configured in `infra/terraform/versions.tf`; override any of these values at init time with `-backend-config` if you use different names.
+- When running in CI (see `.github/workflows/azure-deploy.yaml`), set secrets for:
+  - `TFSTATE_RESOURCE_GROUP`, `TFSTATE_STORAGE_ACCOUNT`, `TFSTATE_CONTAINER`, and optionally `TFSTATE_KEY` (default `dev.terraform.tfstate`).
+  - `AZURE_CREDENTIALS`, `AZURE_SUBSCRIPTION_ID`, `AZURE_TENANT_ID`, `RESOURCE_GROUP`, `AKS_CLUSTER_NAME`, `ACR_NAME`, `ACR_LOGIN_SERVER`, and the workload identity client IDs for `queryApi`, `aiQa`, and `pipeline`.
