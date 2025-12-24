@@ -8,9 +8,12 @@ metadata:
 spec:
   schedule: {{ .Values.pipeline.schedule | quote }}
   concurrencyPolicy: {{ .Values.pipeline.concurrencyPolicy }}
+  startingDeadlineSeconds: {{ .Values.pipeline.startingDeadlineSeconds }}
   jobTemplate:
     spec:
       backoffLimit: {{ .Values.pipeline.backoffLimit }}
+      activeDeadlineSeconds: {{ .Values.pipeline.activeDeadlineSeconds }}
+      ttlSecondsAfterFinished: {{ .Values.pipeline.ttlSecondsAfterFinished }}
       template:
         metadata:
           annotations:
@@ -19,7 +22,7 @@ spec:
             app: pipeline-runner
         spec:
           serviceAccountName: pipeline-sa
-          restartPolicy: OnFailure
+          restartPolicy: Never
           containers:
             - name: pipeline-runner
               image: "{{ required "registry" .Values.global.images.registry }}/{{ .Values.global.images.pipeline.repository }}:{{ .Values.global.images.pipeline.tag }}"
@@ -42,6 +45,10 @@ spec:
                   value: {{ .Values.global.azure.blobPrefixClean | quote }}
                 - name: BLOB_PREFIX_CURATED
                   value: {{ .Values.global.azure.blobPrefixCurated | quote }}
+                - name: RUN_MODE
+                  value: {{ .Values.pipeline.runMode | quote }}
+                - name: LOG_LEVEL
+                  value: {{ .Values.pipeline.logLevel | quote }}
               resources:
                 requests:
                   cpu: {{ .Values.pipeline.resources.requests.cpu | quote }}

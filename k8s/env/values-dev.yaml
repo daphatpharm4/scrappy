@@ -36,6 +36,11 @@ aiQa:
 
 pipeline:
   schedule: "0 * * * *"
+  runMode: batch
+  logLevel: INFO
+  startingDeadlineSeconds: 300
+  activeDeadlineSeconds: 1800
+  ttlSecondsAfterFinished: 86400
 
 secretProviderClass:
   tenantId: "<tenant-id>"
