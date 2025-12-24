@@ -4,6 +4,8 @@ Production-quality, minimal-cost foundation to deploy the African Data Layer mic
 
 This repository now includes lightweight placeholder implementations for the three services (`query-api-service`, `ai-qa-service`, and `pipeline-runner`) so you can build/push images and validate the deployment scaffolding end-to-end.
 
+For a file-by-file walkthrough of the codebase, see [`docs/codebase-reference.md`](docs/codebase-reference.md).
+
 ## Prerequisites
 - Azure subscription with Owner role on the target resource group scope
 - Azure Cloud Shell (recommended) or local shell with: `az` CLI, Terraform >= 1.6, kubectl, helm, jq, make
