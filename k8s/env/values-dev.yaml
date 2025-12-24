@@ -8,6 +8,7 @@ global:
     queryApiClientId: "<query-api-mi-client-id>"
     aiQaClientId: "<ai-qa-mi-client-id>"
     pipelineClientId: "<pipeline-mi-client-id>"
+    scraperClientId: "<scraper-mi-client-id>"
     storageAccount: "<storage-account-name>"
     blobContainer: "datalake"
     blobPrefixRaw: "raw"
@@ -52,3 +53,15 @@ pipeline:
 secretProviderClass:
   tenantId: "<tenant-id>"
   keyVaultName: "adl-dev-kv"
+
+scraper:
+  enabled: true
+  schedule: "0 * * * *"
+  image:
+    repository: "<acr>.azurecr.io/scraper-service"
+    tag: "0.1"
+  modelProvider: "openai"
+  targetUrls:
+    - "https://example.com/lead1"
+    - "https://example.com/lead2"
+  extraEnv: []
