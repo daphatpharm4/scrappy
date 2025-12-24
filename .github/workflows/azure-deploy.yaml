@@ -1,0 +1,176 @@
+name: deploy-to-azure
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  TF_WORKING_DIR: infra/terraform
+  TF_VAR_environment: dev
+  # Backend defaults; override with secrets as needed.
+  TFSTATE_KEY: dev.terraform.tfstate
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.x
+
+      - name: Terraform init/plan/apply with remote state
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        env:
+          ARM_USE_OIDC: true
+          ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          TFSTATE_RESOURCE_GROUP: ${{ secrets.TFSTATE_RESOURCE_GROUP }}
+          TFSTATE_STORAGE_ACCOUNT: ${{ secrets.TFSTATE_STORAGE_ACCOUNT }}
+          TFSTATE_CONTAINER: ${{ secrets.TFSTATE_CONTAINER }}
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=${TFSTATE_RESOURCE_GROUP:-adl-dev-rg}" \
+            -backend-config="storage_account_name=${TFSTATE_STORAGE_ACCOUNT:-adltfstatesa}" \
+            -backend-config="container_name=${TFSTATE_CONTAINER:-tfstate}" \
+            -backend-config="key=${TFSTATE_KEY}"
+          terraform plan -var-file=env/dev.tfvars -out=plan.tfplan
+          terraform apply -auto-approve plan.tfplan
+
+  build_push:
+    needs: terraform
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build and push images to ACR
+        env:
+          REGISTRY: ${{ secrets.ACR_LOGIN_SERVER }}
+          ACR_NAME: ${{ secrets.ACR_NAME }}
+          AZ_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          az acr login --name "$ACR_NAME"
+          for IMAGE in query-api-service ai-qa-service pipeline-runner; do
+            if [ -d "$IMAGE" ]; then
+              docker build -t "$REGISTRY/$IMAGE:latest" "$IMAGE"
+              docker push "$REGISTRY/$IMAGE:latest"
+            else
+              echo "Skipping $IMAGE because directory is missing"
+            fi
+          done
+
+  deploy:
+    needs: build_push
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials -n "${{ secrets.AKS_CLUSTER_NAME }}" -g "${{ secrets.RESOURCE_GROUP }}" --overwrite-existing
+
+      - name: Render Helm values from secrets
+        env:
+          SOURCE_VALUES: k8s/env/values-dev.yaml
+          RENDERED_VALUES: values.rendered.yaml
+          AZ_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZ_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZ_RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
+          AZ_AKS_NAME: ${{ secrets.AKS_CLUSTER_NAME }}
+          AZ_KEYVAULT_NAME: ${{ secrets.KEYVAULT_NAME }}
+          AZ_STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT_NAME }}
+          AZ_ACR_LOGIN: ${{ secrets.ACR_LOGIN_SERVER }}
+          AZ_INGRESS_HOST: ${{ secrets.INGRESS_HOST }}
+          AZ_INGRESS_TLS_SECRET: ${{ secrets.INGRESS_TLS_SECRET }}
+          QUERY_API_CLIENT_ID: ${{ secrets.QUERY_API_CLIENT_ID }}
+          AI_QA_CLIENT_ID: ${{ secrets.AI_QA_CLIENT_ID }}
+          PIPELINE_CLIENT_ID: ${{ secrets.PIPELINE_CLIENT_ID }}
+          QUERY_API_TAG: ${{ secrets.QUERY_API_TAG }}
+          AI_QA_TAG: ${{ secrets.AI_QA_TAG }}
+          PIPELINE_TAG: ${{ secrets.PIPELINE_TAG }}
+        run: |
+          python -m pip install --upgrade pip pyyaml
+          python - <<'PY'
+          import os, sys, yaml
+          source = os.environ["SOURCE_VALUES"]
+          target = os.environ["RENDERED_VALUES"]
+          with open(source, "r") as f:
+            data = yaml.safe_load(f)
+
+          def set_path(path, value):
+            if value in ("", None):
+              return
+            ref = data
+            for key in path[:-1]:
+              ref = ref.setdefault(key, {})
+            ref[path[-1]] = value
+
+          set_path(["global", "azure", "subscriptionId"], os.getenv("AZ_SUBSCRIPTION_ID"))
+          set_path(["global", "azure", "tenantId"], os.getenv("AZ_TENANT_ID"))
+          set_path(["global", "azure", "resourceGroup"], os.getenv("AZ_RESOURCE_GROUP"))
+          set_path(["global", "azure", "aksClusterName"], os.getenv("AZ_AKS_NAME"))
+          set_path(["global", "azure", "keyVaultName"], os.getenv("AZ_KEYVAULT_NAME"))
+          set_path(["global", "azure", "storageAccount"], os.getenv("AZ_STORAGE_ACCOUNT"))
+          set_path(["global", "azure", "queryApiClientId"], os.getenv("QUERY_API_CLIENT_ID"))
+          set_path(["global", "azure", "aiQaClientId"], os.getenv("AI_QA_CLIENT_ID"))
+          set_path(["global", "azure", "pipelineClientId"], os.getenv("PIPELINE_CLIENT_ID"))
+
+          set_path(["global", "images", "registry"], os.getenv("AZ_ACR_LOGIN"))
+          set_path(["global", "images", "queryApi", "tag"], os.getenv("QUERY_API_TAG", "latest"))
+          set_path(["global", "images", "aiQa", "tag"], os.getenv("AI_QA_TAG", "latest"))
+          set_path(["global", "images", "pipeline", "tag"], os.getenv("PIPELINE_TAG", "latest"))
+
+          set_path(["global", "ingress", "host"], os.getenv("AZ_INGRESS_HOST"))
+          set_path(["global", "ingress", "tlsSecretName"], os.getenv("AZ_INGRESS_TLS_SECRET"))
+
+          set_path(["secretProviderClass", "tenantId"], os.getenv("AZ_TENANT_ID"))
+          set_path(["secretProviderClass", "keyVaultName"], os.getenv("AZ_KEYVAULT_NAME"))
+
+          with open(target, "w") as f:
+            yaml.safe_dump(data, f, sort_keys=False)
+          PY
+
+      - name: Deploy ingress and workloads
+        run: |
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+          helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+            --namespace ingress-nginx --create-namespace \
+            --set controller.replicaCount=2 \
+            --set controller.nodeSelector."kubernetes\.io/os"=linux \
+            --set defaultBackend.nodeSelector."kubernetes\.io/os"=linux
+
+          helm upgrade --install african-data-layer k8s/helm/african-data-layer \
+            --namespace adl-platform --create-namespace \
+            --values values.rendered.yaml
