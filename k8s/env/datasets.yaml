@@ -1,0 +1,5 @@
+sources:
+  - name: sample
+    raw_path: raw/sample.csv
+    clean_path: clean/sample.parquet
+    curated_path: curated/sample.parquet

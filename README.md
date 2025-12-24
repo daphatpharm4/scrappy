@@ -1,98 +1,66 @@
-# scrappy
+# African Data Layer on AKS
 
-Data lakehouse scaffolding for African data ingestion, validation, and curation.
-
-## Layout
-- `src/africa_datalayer/`: Python package with ingestion, cleansing, and storage helpers.
-- `configs/example_dataset.yaml`: Example config for the ingestion + cleansing CLI.
-- `scripts/`: Command-line entrypoint (exposed as `africa-datalayer`).
-- `tests/`: Unit tests validating ingestion, storage, and cleansing behaviors.
-- `african-data-layer-poc/`: Dockerized PoC with MinIO, ingestion, cleaning, query, and AI Q&A services.
+Production-quality, minimal-cost foundation to deploy the African Data Layer microservices to Azure Kubernetes Service (AKS) with Azure Blob Storage as the data lake and Azure Key Vault for secrets via Workload Identity + Secrets Store CSI Driver.
 
 ## Prerequisites
-- Python 3.11+ with `pip` and a virtual environment tool (e.g., `venv` or `conda`).
-- Network access to download source datasets from the URLs you configure.
-- Either:
-  - Access to an S3-compatible object store (AWS S3, MinIO, or Supabase object storage) plus a pre-created bucket (default: `africa-datalayer`) and credentials with write permissions, or
-  - A local filesystem path where parquet objects and manifests can be written (e.g., `./local_object_store`).
+- Azure subscription with Owner role on the target resource group scope
+- Azure Cloud Shell (recommended) or local shell with: `az` CLI, Terraform >= 1.6, kubectl, helm, jq, make
+- Sufficient quota for AKS, ACR, Storage, Key Vault, Log Analytics
+- Container images available for `query-api-service`, `ai-qa-service`, and `pipeline-runner` (or Dockerfiles to build)
 
-## Create the required resources
-1. **Prepare a config file**: Copy `configs/example_dataset.yaml` to a new path (e.g., `configs/my_dataset.yaml`) and set:
-   - `dataset`: `country_code`, `dataset`, `ingest_date`, `source_url`, and `source_format` (`csv` or `json`).
-   - `object_store`: Either provide S3 connection details (`endpoint_url`, `access_key`, `secret_key`, `region_name`) or uncomment `local_path` to use the filesystem.
-2. **Create storage targets**:
-   - If using S3/MinIO/Supabase, create the bucket named in your config (`bucket`) before running the pipeline.
-   - If using the local filesystem, ensure the directory you reference in `local_path` exists; the CLI will create the bucket prefix beneath it.
-3. **Install dependencies** inside an activated virtual environment:
-   ```bash
-   pip install -e .[dev]
-   ```
-4. **(Optional) Validate permissions** by running a small test write (e.g., `aws s3 ls s3://<bucket>` for S3 or creating a file under your `local_path`).
+## Quickstart (Azure Cloud Shell)
+1. Clone this repo and enter it.
+2. Review and update `infra/terraform/env/dev.tfvars` and `k8s/env/values-dev.yaml` with your subscription ID, region, DNS host, and image tags.
+3. Run the scripts in order (or use `make all`):
+   - `scripts/00_prereqs_check.sh`
+   - `scripts/01_bootstrap_login.sh`
+   - `scripts/02_provision_infra.sh`
+   - `scripts/03_build_and_push_images.sh` (optional if images already exist)
+   - `scripts/04_connect_kubectl.sh`
+   - `scripts/05_install_csi_workload_identity.sh`
+   - `scripts/06_deploy_apps.sh`
+   - `scripts/07_validate.sh`
+4. Access the services (HTTP or HTTPS depending on your ingress/TLS settings):
+   - Query API: `curl -H "Authorization: Bearer <API_AUTH_TOKEN>" https://<host>/api/health`
+   - AI QA: `curl -H "Authorization: Bearer <API_AUTH_TOKEN>" https://<host>/ask/health`
 
-## Quickstart
-1. Create and activate a Python 3.11+ environment and install dependencies (see **Prerequisites**).
-2. Ensure your bucket or local storage path exists (see **Create the required resources**).
-3. Update your YAML config with dataset and storage settings.
-4. Run the ingestion + cleansing flow locally (writes to your configured object store or `local_object_store/` when `local_path` is set in the config):
-   ```bash
-   africa-datalayer --config configs/example_dataset.yaml
-   ```
+## Configuration
+- `k8s/env/values-dev.yaml`:
+  - `global.azure.*`: subscription, tenant, region, resource names
+  - `global.azure.queryApiClientId`, `aiQaClientId`, `pipelineClientId`: workload identity client IDs from Terraform outputs
+  - `global.images.*`: registry and tags for query-api, ai-qa, pipeline
+  - `global.ingress.host` / `global.ingress.tlsSecretName`: DNS and TLS
+  - `queryApi.apiAuthSecretName`: must match Key Vault secret `API_AUTH_TOKEN`
+  - `aiQa.queryApiUrl`: internal service URL (e.g., `http://query-api.adl-platform.svc.cluster.local:8000`)
+  - Storage: `global.storageAccount`, `global.blobContainer`, prefixes
+  - Pipeline schedule: `pipeline.schedule`
+- `k8s/env/datasets.yaml`: datasets config mounted to the pipeline CronJob
+- `infra/terraform/env/dev.tfvars`: project prefix, environment, region, node pool sizing, resource tags, AAD tenant and subscription IDs
+- Create Key Vault secret `API_AUTH_TOKEN` with the bearer token needed by `query-api-service`.
 
-## African Data Layer PoC (docker-compose)
-
-```
-                             +------------------+
-                             |    AI Q&A (8001) |
-                             +---------+--------+
-                                       |
-                                       v
-+---------+    ingest raw    +---------+--------+    curated reads    +-----------------+
-| sample  | ---------------> | Ingestion Service | ------------------> |   Query API     |
-| inputs  |                  +---------+--------+                     |   (DuckDB)      |
-| (HTML & |                            |                              +-----------------+
-| JSON)   |                            v                                       ^
-+---------+                  +---------+--------+                              |
-                               Cleaning Service                                 |
-                             +---------+--------+                               |
-                                       |                                        |
-                                       v                                        |
-                              +-------------------+                             |
-                              |    MinIO          | <---------------------------+
-                              | (raw/clean/curated)
-                              +-------------------+
-```
-
-### Steps
-1. Copy the example environment: `cp african-data-layer-poc/.env.example african-data-layer-poc/.env` and adjust secrets/ports.
-2. Start everything: `docker compose -f african-data-layer-poc/docker-compose.yml up -d --build`.
-3. Bootstrap the bucket/prefixes: `docker compose -f african-data-layer-poc/docker-compose.yml run --rm ingestion-service python /app/scripts/bootstrap_minio.py`.
-4. Load sample data: `docker compose -f african-data-layer-poc/docker-compose.yml run --rm ingestion-service python /app/ingestion-service/ingestion_service.py run`.
-5. Clean and publish curated Parquet: `docker compose -f african-data-layer-poc/docker-compose.yml run --rm cleaning-service python /app/cleaning-service/cleaning_service.py run`.
-6. Query analytics (Bearer token from `.env`):
-   ```bash
-   curl -H "Authorization: Bearer $SHARED_BEARER_TOKEN" "http://localhost:8000/analytics/average_price?country=kenya"
-   ```
-7. Ask an NL question:
-   ```bash
-   curl -X POST -H "Content-Type: application/json" \\
-     -d '{"question":"What is the average price of maize in Kenya?","country":"kenya","item":"maize"}' \\
-     http://localhost:8001/ask
-   ```
-
-### Data flow
-- **Ingestion** (FastAPI + CLI): parses bundled HTML/JSON samples for prices, real estate, and providers across Kenya and Cameroon, adds metadata + correlation IDs, and writes raw JSON to `s3://datalake/raw/<domain>/<country>/<timestamp>.json` (via MinIO).
-- **Cleaning** (FastAPI + CLI): lists new raw objects, validates to canonical schemas, records manifest state in `curated/manifests/processed_raw_files.json`, and writes JSON + Parquet to `clean/<domain>/<country>/<date>.*`.
-- **Query API**: serves authenticated REST endpoints for data retrieval and simple analytics backed by DuckDB reading Parquet from MinIO with an in-memory TTL cache.
-- **AI Q&A**: parses intents (avg rent/price, provider counts, item prices), calls the Query API with a shared bearer token, and returns structured JSON answers.
-
-### Demo script
-Run the full story (compose up, bootstrap, ingest, clean, curl examples):
+## Testing Endpoints
 ```bash
-bash african-data-layer-poc/scripts/run_demo.sh
+API_AUTH_TOKEN=<token>
+HOST=<ingress-host>
+curl -H "Authorization: Bearer ${API_AUTH_TOKEN}" https://${HOST}/api/health
+curl -H "Authorization: Bearer ${API_AUTH_TOKEN}" https://${HOST}/ask/health
 ```
 
-## Architecture
-- A high-level overview of the ingestion and cleansing components, storage layout, and manifests lives in `docs/architecture/overview.md`.
+## Observability
+- Azure Monitor / Container Insights is enabled via Log Analytics
+- Readiness and liveness probes on `/health`
+- HPAs on query-api and ai-qa (CPU-based)
+- Basic alert templates are in Helm values for extension
 
-## Documentation
-- [African Data Layer PoC Plan](docs/african-data-layer-poc.md)
+## Data Lake Access
+- Data is stored in the blob container `datalake` in the provisioned Storage Account.
+- Use `az storage blob list --account-name <storage> -c datalake` after authenticating with `az login` and `az account set`.
+
+## Troubleshooting
+- **Pods Pending**: check node quotas and `kubectl describe pod`. Verify CSI Driver and Workload Identity installation.
+- **Auth Failures**: ensure Key Vault secret `API_AUTH_TOKEN` exists and federated credentials are created; rerun `scripts/05_install_csi_workload_identity.sh`.
+- **Ingress Issues**: confirm DNS points to the ingress public IP from `kubectl get ingress -n adl-platform`.
+- **Terraform Errors**: validate `dev.tfvars` values and that the user has rights to create resources.
+
+## Cleanup
+Run `scripts/99_destroy.sh` to remove provisioned resources.

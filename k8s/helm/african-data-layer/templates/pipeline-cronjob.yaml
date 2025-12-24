@@ -1,0 +1,58 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pipeline-runner
+  namespace: adl-jobs
+  labels:
+    app: pipeline-runner
+spec:
+  schedule: {{ .Values.pipeline.schedule | quote }}
+  concurrencyPolicy: {{ .Values.pipeline.concurrencyPolicy }}
+  jobTemplate:
+    spec:
+      backoffLimit: {{ .Values.pipeline.backoffLimit }}
+      template:
+        metadata:
+          annotations:
+            azure.workload.identity/use: "true"
+          labels:
+            app: pipeline-runner
+        spec:
+          serviceAccountName: pipeline-sa
+          restartPolicy: OnFailure
+          containers:
+            - name: pipeline-runner
+              image: "{{ required "registry" .Values.global.images.registry }}/{{ .Values.global.images.pipeline.repository }}:{{ .Values.global.images.pipeline.tag }}"
+              args: ["africa-datalayer", "ingest-and-cleanse", "--config", "/configs/datasets.yaml"]
+              volumeMounts:
+                - name: datasets-config
+                  mountPath: /configs
+              env:
+                - name: AZURE_CLIENT_ID
+                  value: {{ required "pipeline workload identity clientId is required" .Values.global.azure.pipelineClientId | quote }}
+                - name: AZURE_TENANT_ID
+                  value: {{ required "tenantId required" .Values.global.azure.tenantId | quote }}
+                - name: AZURE_STORAGE_ACCOUNT
+                  value: {{ .Values.global.azure.storageAccount | quote }}
+                - name: BLOB_CONTAINER
+                  value: {{ .Values.global.azure.blobContainer | quote }}
+                - name: BLOB_PREFIX_RAW
+                  value: {{ .Values.global.azure.blobPrefixRaw | quote }}
+                - name: BLOB_PREFIX_CLEAN
+                  value: {{ .Values.global.azure.blobPrefixClean | quote }}
+                - name: BLOB_PREFIX_CURATED
+                  value: {{ .Values.global.azure.blobPrefixCurated | quote }}
+              resources:
+                requests:
+                  cpu: {{ .Values.pipeline.resources.requests.cpu | quote }}
+                  memory: {{ .Values.pipeline.resources.requests.memory | quote }}
+                limits:
+                  cpu: {{ .Values.pipeline.resources.limits.cpu | quote }}
+                  memory: {{ .Values.pipeline.resources.limits.memory | quote }}
+          volumes:
+            - name: datasets-config
+              configMap:
+                name: pipeline-datasets
+                items:
+                  - key: datasets.yaml
+                    path: datasets.yaml

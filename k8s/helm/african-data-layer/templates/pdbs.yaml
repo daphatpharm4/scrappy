@@ -1,0 +1,32 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: query-api-pdb
+  namespace: adl-platform
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: query-api
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: ai-qa-pdb
+  namespace: adl-platform
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: ai-qa
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: pipeline-pdb
+  namespace: adl-jobs
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: pipeline-runner

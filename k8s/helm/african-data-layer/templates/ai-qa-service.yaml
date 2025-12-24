@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-qa
+  namespace: adl-platform
+spec:
+  selector:
+    app: ai-qa
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: {{ .Values.aiQa.service.port }}
+      name: http
+  type: ClusterIP

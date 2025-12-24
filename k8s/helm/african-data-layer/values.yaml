@@ -1,0 +1,81 @@
+global:
+  azure:
+    subscriptionId: ""
+    tenantId: ""
+    resourceGroup: "adl-dev-rg"
+    aksClusterName: "adl-dev-aks"
+    keyVaultName: "adl-dev-kv"
+    queryApiClientId: ""
+    aiQaClientId: ""
+    pipelineClientId: ""
+    storageAccount: ""
+    blobContainer: "datalake"
+    blobPrefixRaw: "raw"
+    blobPrefixClean: "clean"
+    blobPrefixCurated: "curated"
+  images:
+    registry: ""
+    queryApi: { repository: "query-api-service", tag: "latest" }
+    aiQa: { repository: "ai-qa-service", tag: "latest" }
+    pipeline: { repository: "pipeline-runner", tag: "latest" }
+  ingress:
+    host: ""
+    tlsSecretName: ""
+
+queryApi:
+  replicaCount: 2
+  apiAuthSecretName: "API_AUTH_TOKEN"
+  service:
+    port: 8000
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+
+aiQa:
+  replicaCount: 2
+  queryApiUrl: "http://query-api.adl-platform.svc.cluster.local:8000"
+  service:
+    port: 8001
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+
+pipeline:
+  schedule: "0 * * * *"
+  concurrencyPolicy: Forbid
+  backoffLimit: 3
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+secretProviderClass:
+  tenantId: ""
+  keyVaultName: ""
+  objects: |
+    array:
+      - |
+        objectName: API_AUTH_TOKEN
+        objectType: secret
+        objectVersion: ""

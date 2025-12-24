@@ -1,0 +1,21 @@
+{{- if .Values.aiQa.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ai-qa-hpa
+  namespace: adl-platform
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ai-qa
+  minReplicas: {{ .Values.aiQa.hpa.minReplicas }}
+  maxReplicas: {{ .Values.aiQa.hpa.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.aiQa.hpa.targetCPUUtilizationPercentage }}
+{{- end }}

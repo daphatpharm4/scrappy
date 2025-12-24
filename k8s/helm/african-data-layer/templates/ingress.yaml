@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: adl-ingress
+  namespace: adl-platform
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  {{- if .Values.global.ingress.tlsSecretName }}
+  tls:
+    - hosts:
+        - {{ .Values.global.ingress.host }}
+      secretName: {{ .Values.global.ingress.tlsSecretName }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.global.ingress.host }}
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: query-api
+                port:
+                  number: 80
+          - path: /ask
+            pathType: Prefix
+            backend:
+              service:
+                name: ai-qa
+                port:
+                  number: 80

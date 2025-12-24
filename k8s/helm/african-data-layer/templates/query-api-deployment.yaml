@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: query-api
+  namespace: adl-platform
+  labels:
+    app: query-api
+spec:
+  replicas: {{ .Values.queryApi.replicaCount }}
+  selector:
+    matchLabels:
+      app: query-api
+  template:
+    metadata:
+      labels:
+        app: query-api
+      annotations:
+        azure.workload.identity/use: "true"
+        secrets-store.csi.k8s.io/used: "true"
+    spec:
+      serviceAccountName: query-api-sa
+      containers:
+        - name: query-api
+          image: "{{ required "registry" .Values.global.images.registry }}/{{ .Values.global.images.queryApi.repository }}:{{ .Values.global.images.queryApi.tag }}"
+          ports:
+            - containerPort: {{ .Values.queryApi.service.port }}
+          env:
+            - name: AZURE_CLIENT_ID
+              value: {{ required "queryApi workload identity clientId is required" .Values.global.azure.queryApiClientId | quote }}
+            - name: AZURE_TENANT_ID
+              value: {{ required "tenantId required" .Values.global.azure.tenantId | quote }}
+            - name: API_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: api-auth-token
+                  key: API_AUTH_TOKEN
+            - name: AZURE_STORAGE_ACCOUNT
+              value: {{ .Values.global.azure.storageAccount | quote }}
+            - name: BLOB_CONTAINER
+              value: {{ .Values.global.azure.blobContainer | quote }}
+            - name: BLOB_PREFIX_RAW
+              value: {{ .Values.global.azure.blobPrefixRaw | quote }}
+            - name: BLOB_PREFIX_CLEAN
+              value: {{ .Values.global.azure.blobPrefixClean | quote }}
+            - name: BLOB_PREFIX_CURATED
+              value: {{ .Values.global.azure.blobPrefixCurated | quote }}
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.queryApi.service.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.queryApi.service.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: {{ .Values.queryApi.resources.requests.cpu | quote }}
+              memory: {{ .Values.queryApi.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ .Values.queryApi.resources.limits.cpu | quote }}
+              memory: {{ .Values.queryApi.resources.limits.memory | quote }}
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: adl-kv-spc
