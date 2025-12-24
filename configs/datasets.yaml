@@ -1,0 +1,2201 @@
+datasets:
+- name: Dataset 001
+  domain: economic
+  country: KEN
+  source_id: dataset-001
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-001.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 002
+  domain: energy
+  country: NGA
+  source_id: dataset-002
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-002.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 003
+  domain: realestate
+  country: GHA
+  source_id: dataset-003
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-003.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 004
+  domain: prices
+  country: ZAF
+  source_id: dataset-004
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-004.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 005
+  domain: demographics
+  country: EGY
+  source_id: dataset-005
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-005.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 006
+  domain: economic
+  country: KEN
+  source_id: dataset-006
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-006.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 007
+  domain: energy
+  country: NGA
+  source_id: dataset-007
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-007.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 008
+  domain: realestate
+  country: GHA
+  source_id: dataset-008
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-008.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 009
+  domain: prices
+  country: ZAF
+  source_id: dataset-009
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-009.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 010
+  domain: demographics
+  country: EGY
+  source_id: dataset-010
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-010.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 011
+  domain: economic
+  country: KEN
+  source_id: dataset-011
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-011.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 012
+  domain: energy
+  country: NGA
+  source_id: dataset-012
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-012.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 013
+  domain: realestate
+  country: GHA
+  source_id: dataset-013
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-013.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 014
+  domain: prices
+  country: ZAF
+  source_id: dataset-014
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-014.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 015
+  domain: demographics
+  country: EGY
+  source_id: dataset-015
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-015.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 016
+  domain: economic
+  country: KEN
+  source_id: dataset-016
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-016.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 017
+  domain: energy
+  country: NGA
+  source_id: dataset-017
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-017.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 018
+  domain: realestate
+  country: GHA
+  source_id: dataset-018
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-018.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 019
+  domain: prices
+  country: ZAF
+  source_id: dataset-019
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-019.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 020
+  domain: demographics
+  country: EGY
+  source_id: dataset-020
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-020.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 021
+  domain: economic
+  country: KEN
+  source_id: dataset-021
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-021.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 022
+  domain: energy
+  country: NGA
+  source_id: dataset-022
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-022.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 023
+  domain: realestate
+  country: GHA
+  source_id: dataset-023
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-023.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 024
+  domain: prices
+  country: ZAF
+  source_id: dataset-024
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-024.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 025
+  domain: demographics
+  country: EGY
+  source_id: dataset-025
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-025.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 026
+  domain: economic
+  country: KEN
+  source_id: dataset-026
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-026.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 027
+  domain: energy
+  country: NGA
+  source_id: dataset-027
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-027.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 028
+  domain: realestate
+  country: GHA
+  source_id: dataset-028
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-028.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 029
+  domain: prices
+  country: ZAF
+  source_id: dataset-029
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-029.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 030
+  domain: demographics
+  country: EGY
+  source_id: dataset-030
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-030.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 031
+  domain: economic
+  country: KEN
+  source_id: dataset-031
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-031.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 032
+  domain: energy
+  country: NGA
+  source_id: dataset-032
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-032.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 033
+  domain: realestate
+  country: GHA
+  source_id: dataset-033
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-033.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 034
+  domain: prices
+  country: ZAF
+  source_id: dataset-034
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-034.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 035
+  domain: demographics
+  country: EGY
+  source_id: dataset-035
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-035.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 036
+  domain: economic
+  country: KEN
+  source_id: dataset-036
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-036.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 037
+  domain: energy
+  country: NGA
+  source_id: dataset-037
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-037.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 038
+  domain: realestate
+  country: GHA
+  source_id: dataset-038
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-038.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 039
+  domain: prices
+  country: ZAF
+  source_id: dataset-039
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-039.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 040
+  domain: demographics
+  country: EGY
+  source_id: dataset-040
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-040.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 041
+  domain: economic
+  country: KEN
+  source_id: dataset-041
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-041.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 042
+  domain: energy
+  country: NGA
+  source_id: dataset-042
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-042.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 043
+  domain: realestate
+  country: GHA
+  source_id: dataset-043
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-043.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 044
+  domain: prices
+  country: ZAF
+  source_id: dataset-044
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-044.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 045
+  domain: demographics
+  country: EGY
+  source_id: dataset-045
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-045.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 046
+  domain: economic
+  country: KEN
+  source_id: dataset-046
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-046.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 047
+  domain: energy
+  country: NGA
+  source_id: dataset-047
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-047.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 048
+  domain: realestate
+  country: GHA
+  source_id: dataset-048
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-048.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 049
+  domain: prices
+  country: ZAF
+  source_id: dataset-049
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-049.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 050
+  domain: demographics
+  country: EGY
+  source_id: dataset-050
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-050.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 051
+  domain: economic
+  country: KEN
+  source_id: dataset-051
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-051.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 052
+  domain: energy
+  country: NGA
+  source_id: dataset-052
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-052.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 053
+  domain: realestate
+  country: GHA
+  source_id: dataset-053
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-053.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 054
+  domain: prices
+  country: ZAF
+  source_id: dataset-054
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-054.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 055
+  domain: demographics
+  country: EGY
+  source_id: dataset-055
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-055.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 056
+  domain: economic
+  country: KEN
+  source_id: dataset-056
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-056.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 057
+  domain: energy
+  country: NGA
+  source_id: dataset-057
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-057.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 058
+  domain: realestate
+  country: GHA
+  source_id: dataset-058
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-058.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 059
+  domain: prices
+  country: ZAF
+  source_id: dataset-059
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-059.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 060
+  domain: demographics
+  country: EGY
+  source_id: dataset-060
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-060.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 061
+  domain: economic
+  country: KEN
+  source_id: dataset-061
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-061.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 062
+  domain: energy
+  country: NGA
+  source_id: dataset-062
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-062.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 063
+  domain: realestate
+  country: GHA
+  source_id: dataset-063
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-063.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 064
+  domain: prices
+  country: ZAF
+  source_id: dataset-064
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-064.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 065
+  domain: demographics
+  country: EGY
+  source_id: dataset-065
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-065.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 066
+  domain: economic
+  country: KEN
+  source_id: dataset-066
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-066.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 067
+  domain: energy
+  country: NGA
+  source_id: dataset-067
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-067.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 068
+  domain: realestate
+  country: GHA
+  source_id: dataset-068
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-068.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 069
+  domain: prices
+  country: ZAF
+  source_id: dataset-069
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-069.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 070
+  domain: demographics
+  country: EGY
+  source_id: dataset-070
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-070.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 071
+  domain: economic
+  country: KEN
+  source_id: dataset-071
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-071.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 072
+  domain: energy
+  country: NGA
+  source_id: dataset-072
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-072.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 073
+  domain: realestate
+  country: GHA
+  source_id: dataset-073
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-073.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 074
+  domain: prices
+  country: ZAF
+  source_id: dataset-074
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-074.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 075
+  domain: demographics
+  country: EGY
+  source_id: dataset-075
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-075.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 076
+  domain: economic
+  country: KEN
+  source_id: dataset-076
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-076.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 077
+  domain: energy
+  country: NGA
+  source_id: dataset-077
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-077.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 078
+  domain: realestate
+  country: GHA
+  source_id: dataset-078
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-078.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 079
+  domain: prices
+  country: ZAF
+  source_id: dataset-079
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-079.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 080
+  domain: demographics
+  country: EGY
+  source_id: dataset-080
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-080.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 081
+  domain: economic
+  country: KEN
+  source_id: dataset-081
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-081.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 082
+  domain: energy
+  country: NGA
+  source_id: dataset-082
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-082.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 083
+  domain: realestate
+  country: GHA
+  source_id: dataset-083
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-083.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 084
+  domain: prices
+  country: ZAF
+  source_id: dataset-084
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-084.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 085
+  domain: demographics
+  country: EGY
+  source_id: dataset-085
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-085.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 086
+  domain: economic
+  country: KEN
+  source_id: dataset-086
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-086.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 087
+  domain: energy
+  country: NGA
+  source_id: dataset-087
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-087.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 088
+  domain: realestate
+  country: GHA
+  source_id: dataset-088
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-088.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 089
+  domain: prices
+  country: ZAF
+  source_id: dataset-089
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-089.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 090
+  domain: demographics
+  country: EGY
+  source_id: dataset-090
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-090.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 091
+  domain: economic
+  country: KEN
+  source_id: dataset-091
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-091.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 092
+  domain: energy
+  country: NGA
+  source_id: dataset-092
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-092.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 093
+  domain: realestate
+  country: GHA
+  source_id: dataset-093
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-093.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 094
+  domain: prices
+  country: ZAF
+  source_id: dataset-094
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-094.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 095
+  domain: demographics
+  country: EGY
+  source_id: dataset-095
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-095.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 096
+  domain: economic
+  country: KEN
+  source_id: dataset-096
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-096.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 097
+  domain: energy
+  country: NGA
+  source_id: dataset-097
+  run_mode: batch
+  fetch:
+    url: https://example.com/data/dataset-097.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 098
+  domain: realestate
+  country: GHA
+  source_id: dataset-098
+  run_mode: any
+  fetch:
+    url: https://example.com/data/dataset-098.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 099
+  domain: prices
+  country: ZAF
+  source_id: dataset-099
+  run_mode: dev
+  fetch:
+    url: https://example.com/data/dataset-099.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
+- name: Dataset 100
+  domain: demographics
+  country: EGY
+  source_id: dataset-100
+  run_mode: backfill
+  fetch:
+    url: https://example.com/data/dataset-100.csv
+    method: GET
+    format: csv
+    retry:
+      attempts: 3
+      backoff_seconds: 2
+      max_backoff_seconds: 30
+  schema:
+  - name: date
+    dtype: datetime64[ns]
+  - name: value
+    dtype: float
+    required: false
+  - name: provider
+    dtype: string
+    required: false
