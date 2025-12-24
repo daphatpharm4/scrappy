@@ -1,0 +1,79 @@
+datasets:
+  - name: kenya_population
+    domain: demographics
+    country: KEN
+    source_id: owid_population
+    run_mode: batch
+    fetch:
+      url: https://ourworldindata.org/grapher/population.csv?country=KEN
+      method: GET
+      format: csv
+      retry:
+        attempts: 3
+        backoff_seconds: 2
+        max_backoff_seconds: 30
+    schema:
+      fields:
+        - name: Entity
+          dtype: string
+          required: true
+        - name: Code
+          dtype: string
+        - name: Year
+          dtype: int64
+          required: true
+        - name: Population
+          dtype: float64
+          required: true
+  - name: nigeria_electricity_access
+    domain: energy
+    country: NGA
+    source_id: owid_electricity_access
+    run_mode: batch
+    fetch:
+      url: https://ourworldindata.org/grapher/share-of-population-with-electricity-access.csv?country=NGA
+      method: GET
+      format: csv
+      retry:
+        attempts: 3
+        backoff_seconds: 2
+        max_backoff_seconds: 30
+    schema:
+      fields:
+        - name: Entity
+          dtype: string
+          required: true
+        - name: Code
+          dtype: string
+        - name: Year
+          dtype: int64
+          required: true
+        - name: share-of-population-with-electricity-access
+          dtype: float64
+          required: true
+  - name: south_africa_mobile_subscriptions
+    domain: telecommunications
+    country: ZAF
+    source_id: itu_mobile_cellular
+    run_mode: batch
+    fetch:
+      url: https://ourworldindata.org/grapher/mobile-cellular-subscriptions-per-100-people.csv?country=ZAF
+      method: GET
+      format: csv
+      retry:
+        attempts: 3
+        backoff_seconds: 2
+        max_backoff_seconds: 30
+    schema:
+      fields:
+        - name: Entity
+          dtype: string
+          required: true
+        - name: Code
+          dtype: string
+        - name: Year
+          dtype: int64
+          required: true
+        - name: mobile-cellular-subscriptions-per-100-people
+          dtype: float64
+          required: true
