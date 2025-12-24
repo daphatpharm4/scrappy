@@ -1,17 +1,23 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars.json
+crash.log
+*.tfplan
+
+# Kubernetes
+kubeconfig
+
+# Python/Node/General
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-.Python
+node_modules/
 .env
-.venv
-env/
-venv/
-build/
-dist/
-*.egg-info/
-.pytest_cache/
-.cache/
 
-# Local data artifacts
-local_object_store/
+# Helm
+charts/*.tgz
+
+# Local files
+*.log
+.DS_Store

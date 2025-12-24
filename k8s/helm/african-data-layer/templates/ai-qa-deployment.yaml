@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-qa
+  namespace: adl-platform
+  labels:
+    app: ai-qa
+spec:
+  replicas: {{ .Values.aiQa.replicaCount }}
+  selector:
+    matchLabels:
+      app: ai-qa
+  template:
+    metadata:
+      labels:
+        app: ai-qa
+      annotations:
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: ai-qa-sa
+      containers:
+        - name: ai-qa
+          image: "{{ required "registry" .Values.global.images.registry }}/{{ .Values.global.images.aiQa.repository }}:{{ .Values.global.images.aiQa.tag }}"
+          ports:
+            - containerPort: {{ .Values.aiQa.service.port }}
+          env:
+            - name: AZURE_CLIENT_ID
+              value: {{ required "aiQa workload identity clientId is required" .Values.global.azure.aiQaClientId | quote }}
+            - name: AZURE_TENANT_ID
+              value: {{ required "tenantId required" .Values.global.azure.tenantId | quote }}
+            - name: QUERY_API_URL
+              value: {{ .Values.aiQa.queryApiUrl | quote }}
+            - name: AZURE_STORAGE_ACCOUNT
+              value: {{ .Values.global.azure.storageAccount | quote }}
+            - name: BLOB_CONTAINER
+              value: {{ .Values.global.azure.blobContainer | quote }}
+            - name: BLOB_PREFIX_RAW
+              value: {{ .Values.global.azure.blobPrefixRaw | quote }}
+            - name: BLOB_PREFIX_CLEAN
+              value: {{ .Values.global.azure.blobPrefixClean | quote }}
+            - name: BLOB_PREFIX_CURATED
+              value: {{ .Values.global.azure.blobPrefixCurated | quote }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.aiQa.service.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.aiQa.service.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: {{ .Values.aiQa.resources.requests.cpu | quote }}
+              memory: {{ .Values.aiQa.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ .Values.aiQa.resources.limits.cpu | quote }}
+              memory: {{ .Values.aiQa.resources.limits.memory | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-qa
+  namespace: adl-platform
+spec:
+  selector:
+    app: ai-qa
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: {{ .Values.aiQa.service.port }}
+      name: http
+  type: ClusterIP
