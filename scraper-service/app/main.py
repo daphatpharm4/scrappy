@@ -7,9 +7,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import aiohttp
+from crawl4ai import AsyncWebCrawler, CrawlerRunConfig, ProxyConfig
 import pandas as pd
 import yaml
-from playwright.async_api import async_playwright
 
 
 DATA_DIR = Path("/data/out")
@@ -191,30 +191,33 @@ async def call_model(
     return parse_model_response(response_text)
 
 
-async def fetch_html(url: str, proxy: Optional[str]) -> str:
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True, proxy={"server": proxy} if proxy else None)
-        page = await browser.new_page()
-        await page.goto(url, wait_until="networkidle")
-        content = await page.content()
-        await browser.close()
-        return content
+async def fetch_html(crawler: AsyncWebCrawler, url: str, proxy: Optional[str]) -> str:
+    run_config = CrawlerRunConfig()
+    if proxy:
+        run_config.proxy_config = ProxyConfig(server=proxy)
+
+    result = await crawler.arun(url=url, config=run_config)
+    if not getattr(result, "success", True) or not getattr(result, "html", None):
+        raise RuntimeError(f"Unable to fetch HTML for {url}")
+
+    return result.html
 
 
 async def process_url(
     url: str,
     session: aiohttp.ClientSession,
     provider: str,
-    api_keys: Dict[str, Optional[str]>,
+    api_keys: Dict[str, Optional[str]],
     proxies: List[str],
     index: int,
+    crawler: AsyncWebCrawler,
 ) -> Optional[Dict[str, Any]]:
     correlation_id = str(uuid.uuid4())
     proxy = select_proxy(proxies, index)
     log_event("scrape_started", correlation_id=correlation_id, url=url, model_provider=provider, proxy=proxy)
 
     try:
-        html_content = await fetch_html(url, proxy)
+        html_content = await fetch_html(crawler, url, proxy)
         log_event("scrape_completed", correlation_id=correlation_id, url=url, model_provider=provider, status="ok")
     except Exception as exc:
         log_event(
@@ -280,12 +283,16 @@ async def run() -> None:
     timeout = aiohttp.ClientTimeout(total=120)
     results: List[Dict[str, Any]] = []
 
-    async with aiohttp.ClientSession(timeout=timeout) as session:
-        tasks = [process_url(url, session, provider, api_keys, proxies, idx) for idx, url in enumerate(targets)]
-        for coro in asyncio.as_completed(tasks):
-            result = await coro
-            if result:
-                results.append(result)
+    async with AsyncWebCrawler() as crawler:
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            tasks = [
+                process_url(url, session, provider, api_keys, proxies, idx, crawler)
+                for idx, url in enumerate(targets)
+            ]
+            for coro in asyncio.as_completed(tasks):
+                result = await coro
+                if result:
+                    results.append(result)
 
     write_outputs(results)
 
