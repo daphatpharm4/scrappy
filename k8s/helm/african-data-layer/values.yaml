@@ -29,11 +29,11 @@ queryApi:
     port: 8000
   resources:
     requests:
-      cpu: "200m"
-      memory: "256Mi"
-    limits:
-      cpu: "500m"
+      cpu: "300m"
       memory: "512Mi"
+    limits:
+      cpu: "1"
+      memory: "1Gi"
   hpa:
     enabled: true
     minReplicas: 2

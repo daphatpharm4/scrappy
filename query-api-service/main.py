@@ -1,38 +1,35 @@
-"""Minimal FastAPI app placeholder for the Query API service."""
-
 from __future__ import annotations
 
-import os
 from fastapi import FastAPI
 
+from app.config import Settings, get_settings
+from app.dependencies import get_settings as settings_dependency
+from app.routers import analytics, health, prices, providers, realestate
+
 SERVICE_NAME = "query-api-service"
-API_PREFIX = "/api"
-
-app = FastAPI(title="Query API (Placeholder)", version="0.1.0")
 
 
-def service_metadata() -> dict:
-    return {
-        "service": SERVICE_NAME,
-        "environment": os.environ.get("ENVIRONMENT", "dev"),
-        "storage_account": os.environ.get("AZURE_STORAGE_ACCOUNT", ""),
-        "blob_container": os.environ.get("BLOB_CONTAINER", ""),
-    }
+def create_app(settings: Settings | None = None) -> FastAPI:
+    settings = settings or get_settings()
+    app = FastAPI(title="Query API", version="1.0.0")
+
+    # Allow tests to override the shared settings dependency.
+    app.dependency_overrides[settings_dependency] = lambda: settings
+
+    app.include_router(health.router)
+    app.include_router(prices.router, prefix=settings.api_prefix)
+    app.include_router(realestate.router, prefix=settings.api_prefix)
+    app.include_router(providers.router, prefix=settings.api_prefix)
+    app.include_router(analytics.router, prefix=settings.api_prefix)
+
+    @app.get("/health", tags=["health"])
+    def root_health() -> dict:
+        return {"status": "ok", "service": SERVICE_NAME, "environment": settings.environment}
+
+    return app
 
 
-@app.get("/health")
-def health() -> dict:
-    return {"status": "ok", **service_metadata()}
-
-
-@app.get(f"{API_PREFIX}/health")
-def api_health() -> dict:
-    return {"status": "ok", **service_metadata()}
-
-
-@app.get(f"{API_PREFIX}/info")
-def info() -> dict:
-    return {"message": "Query API placeholder running", **service_metadata()}
+app = create_app()
 
 
 if __name__ == "__main__":

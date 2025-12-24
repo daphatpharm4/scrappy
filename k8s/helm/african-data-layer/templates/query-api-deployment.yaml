@@ -29,6 +29,10 @@ spec:
               value: {{ required "queryApi workload identity clientId is required" .Values.global.azure.queryApiClientId | quote }}
             - name: AZURE_TENANT_ID
               value: {{ required "tenantId required" .Values.global.azure.tenantId | quote }}
+            - name: KEY_VAULT_NAME
+              value: {{ required "keyVaultName required" .Values.global.azure.keyVaultName | quote }}
+            - name: API_AUTH_SECRET_NAME
+              value: {{ .Values.queryApi.apiAuthSecretName | quote }}
             - name: API_AUTH_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -50,13 +54,13 @@ spec:
               readOnly: true
           readinessProbe:
             httpGet:
-              path: /health
+              path: /health/ready
               port: {{ .Values.queryApi.service.port }}
             initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /health
+              path: /health/live
               port: {{ .Values.queryApi.service.port }}
             initialDelaySeconds: 10
             periodSeconds: 20

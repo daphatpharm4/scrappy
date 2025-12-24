@@ -30,6 +30,13 @@ global:
 
 queryApi:
   apiAuthSecretName: "API_AUTH_TOKEN"
+  resources:
+    requests:
+      cpu: "300m"
+      memory: "512Mi"
+    limits:
+      cpu: "1"
+      memory: "1Gi"
 
 aiQa:
   queryApiUrl: "http://query-api.adl-platform.svc.cluster.local:8000"
