@@ -2,6 +2,8 @@
 
 Production-quality, minimal-cost foundation to deploy the African Data Layer microservices to Azure Kubernetes Service (AKS) with Azure Blob Storage as the data lake and Azure Key Vault for secrets via Workload Identity + Secrets Store CSI Driver.
 
+This repository now includes lightweight placeholder implementations for the three services (`query-api-service`, `ai-qa-service`, and `pipeline-runner`) so you can build/push images and validate the deployment scaffolding end-to-end.
+
 ## Prerequisites
 - Azure subscription with Owner role on the target resource group scope
 - Azure Cloud Shell (recommended) or local shell with: `az` CLI, Terraform >= 1.6, kubectl, helm, jq, make

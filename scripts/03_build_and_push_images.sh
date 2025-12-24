@@ -14,14 +14,16 @@ IMAGES=(
 az account set --subscription "$AZ_SUBSCRIPTION_ID"
 
 for IMAGE in "${IMAGES[@]}"; do
-  if [[ -f "${IMAGE}/Dockerfile" ]]; then
-    echo "Building $IMAGE"
-    docker build -t "$REGISTRY/$IMAGE:latest" "$IMAGE"
-    az acr login --name "$ACR_NAME"
-    docker push "$REGISTRY/$IMAGE:latest"
-  else
+  DOCKERFILE="${IMAGE}/Dockerfile"
+  if [[ ! -f "$DOCKERFILE" ]]; then
     echo "Skipping build for $IMAGE (Dockerfile not found)"
+    continue
   fi
+
+  echo "Building $IMAGE with context '.' and Dockerfile $DOCKERFILE"
+  docker build -t "$REGISTRY/$IMAGE:latest" -f "$DOCKERFILE" .
+  az acr login --name "$ACR_NAME"
+  docker push "$REGISTRY/$IMAGE:latest"
 done
 
 echo "Images handled"
