@@ -1,18 +1,18 @@
 global:
   azure:
-    subscriptionId: <subscription-id>
-    tenantId: <tenant-id>
-    resourceGroup: adl-dev-rg
-    aksClusterName: adl-dev-aks
-    keyVaultName: adl-dev-kv
-    queryApiClientId: <query-api-mi-client-id>
-    aiQaClientId: <ai-qa-mi-client-id>
-    pipelineClientId: <pipeline-mi-client-id>
-    storageAccount: <storage-account-name>
-    blobContainer: datalake
-    blobPrefixRaw: raw
-    blobPrefixClean: clean
-    blobPrefixCurated: curated
+    subscriptionId: "<subscription-id>"
+    tenantId: "<tenant-id>"
+    resourceGroup: "adl-dev-rg"
+    aksClusterName: "adl-dev-aks"
+    keyVaultName: "adl-dev-kv"
+    queryApiClientId: "<query-api-mi-client-id>"
+    aiQaClientId: "<ai-qa-mi-client-id>"
+    pipelineClientId: "<pipeline-mi-client-id>"
+    storageAccount: "<storage-account-name>"
+    blobContainer: "datalake"
+    blobPrefixRaw: "raw"
+    blobPrefixClean: "clean"
+    blobPrefixCurated: "curated"
   images:
     registry: <acr-login-server>
     queryApi:
@@ -50,5 +50,5 @@ pipeline:
   ttlSecondsAfterFinished: 86400
 
 secretProviderClass:
-  tenantId: <tenant-id>
-  keyVaultName: adl-dev-kv
+  tenantId: "<tenant-id>"
+  keyVaultName: "adl-dev-kv"

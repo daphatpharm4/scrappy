@@ -8,6 +8,7 @@ global:
     queryApiClientId: ""
     aiQaClientId: ""
     pipelineClientId: ""
+    scraperClientId: ""
     storageAccount: ""
     blobContainer: "datalake"
     blobPrefixRaw: "raw"
@@ -84,3 +85,49 @@ secretProviderClass:
         objectName: API_AUTH_TOKEN
         objectType: secret
         objectVersion: ""
+
+scraper:
+  enabled: false
+  schedule: "0 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 300
+  backoffLimit: 2
+  activeDeadlineSeconds: 1800
+  ttlSecondsAfterFinished: 86400
+  image:
+    repository: "scraper-service"
+    tag: "latest"
+  modelProvider: "openai"
+  targetUrls: []
+  extraEnv: []
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  secretProviderClass:
+    name: scraper-kv-spc
+    objects: |
+      array:
+        - |
+          objectName: OPENAI_API_KEY
+          objectType: secret
+          objectVersion: ""
+        - |
+          objectName: DEEPSEEK_API_KEY
+          objectType: secret
+          objectVersion: ""
+        - |
+          objectName: XAI_API_KEY
+          objectType: secret
+          objectVersion: ""
+        - |
+          objectName: HTTP_PROXY
+          objectType: secret
+          objectVersion: ""
+        - |
+          objectName: HTTPS_PROXY
+          objectType: secret
+          objectVersion: ""
